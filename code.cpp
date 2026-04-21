@@ -1,5 +1,6 @@
 #include <iostream>
 
+// Node structure for the binary tree
 struct Node {
     int val;
     Node *left, *right;
@@ -8,6 +9,7 @@ struct Node {
 
 bool end_of_input = false;
 
+// Build the tree from extended preorder traversal
 Node* build() {
     if (end_of_input) return nullptr;
     int val;
@@ -26,10 +28,12 @@ Node* build() {
     return node;
 }
 
+// Prune subtrees that contain only 0s
 Node* prune(Node* root) {
     if (!root) return nullptr;
     root->left = prune(root->left);
     root->right = prune(root->right);
+    // If current node is 0 and both children are null (either originally or after pruning), prune it
     if (root->val == 0 && !root->left && !root->right) {
         delete root;
         return nullptr;
@@ -37,6 +41,7 @@ Node* prune(Node* root) {
     return root;
 }
 
+// Print the tree in extended preorder traversal
 void print(Node* root, bool& first) {
     if (!first) std::cout << " ";
     first = false;
@@ -49,6 +54,7 @@ void print(Node* root, bool& first) {
     print(root->right, first);
 }
 
+// Clean up memory
 void deleteTree(Node* root) {
     if (!root) return;
     deleteTree(root->left);
@@ -57,13 +63,17 @@ void deleteTree(Node* root) {
 }
 
 int main() {
+    // Speed up I/O
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(NULL);
+
     Node* root = build();
     root = prune(root);
+
     bool first = true;
     print(root, first);
-    std::cout << std::endl;
+    std::cout << "\n";
+
     deleteTree(root);
     return 0;
 }
